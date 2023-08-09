@@ -1,5 +1,5 @@
 {
-  "name": "stripe-checkout-js",
+  "name": "eldorado-pay-demo",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,17 +9,17 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@stripe/stripe-js": "^1.18.0",
-    "axios": "^0.21.4",
-    "next": "11.1.2",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
-    "stripe": "^8.176.0"
+    "@spruceid/siwe-parser": "^2.0.2",
+    "axios": "^1.4.0",
+    "next": "^13.4.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "siwe": "^2.1.4"
   },
   "devDependencies": {
     "autoprefixer": "^10.3.4",
     "eslint": "7.32.0",
-    "eslint-config-next": "11.1.2",
+    "eslint-config-next": "^13.4.0",
     "postcss": "^8.3.6",
     "tailwindcss": "^2.2.15"
   }

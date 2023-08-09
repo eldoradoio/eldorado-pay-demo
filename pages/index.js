@@ -2,23 +2,24 @@ import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import { useState } from "react";
-import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import { useRouter } from "next/router";
+
 
 export default function Home() {
   const router = useRouter();
   const { status } = router.query;
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState()
 
   const [item, setItem] = useState({
-    name: "Apple AirPods",
-    description: "Latest Apple AirPods.",
+    name: "Tasty bag",
+    description: "Box with assorted groceries",
     image:
-      "https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1400&q=80",
+      "https://images.unsplash.com/photo-1543168256-418811576931?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
     quantity: 0,
-    price: 999,
+    price: 96,
   });
 
   const changeQuantity = (value) => {
@@ -38,29 +39,31 @@ export default function Home() {
     changeQuantity(item.quantity - 1);
   };
 
-  const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
-  const stripePromise = loadStripe(publishableKey);
-  const createCheckOutSession = async () => {
+  const createCheckOut = async () => {
     setLoading(true);
-    const stripe = await stripePromise;
-    const checkoutSession = await axios.post("/api/create-stripe-session", {
-      item: item,
-    });
-    const result = await stripe.redirectToCheckout({
-      sessionId: checkoutSession.data.id,
-    });
-    if (result.error) {
-      alert(result.error.message);
+    let checkoutResult;
+    try {
+      checkoutResult = await axios.post("/api/create-payment-request", {
+        item: item,
+      }).then(x=>x.data)
+      
+
+    } catch (e) {
+      setError(e.message ?? JSON.stringify(e))
     }
     setLoading(false);
+    if (checkoutResult) {
+      router.push(checkoutResult.href)
+    }
   };
+
   return (
     <div className={styles.container}>
       <Head>
-        <title>Stripe Checkout with Next.js</title>
+        <title>El Dorado Pay - Demo</title>
         <meta
           name="description"
-          content="Complete Step By Step Tutorial for integrating Stripe Checkout with Next.js"
+          content="El Dorado Pay Demo"
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -81,7 +84,7 @@ export default function Home() {
           <h3 className="text-xl">{item.name}</h3>
           <p className="text-gray-500">{item.description}</p>
           <p className="text-sm text-gray-600 mt-1">Quantity:</p>
-          <div className="border rounded">
+          <div className="border rounded px-2">
             <button
               onClick={onQuantityMinus}
               className="bg-blue-500 py-2 px-4 text-white rounded hover:bg-blue-600"
@@ -90,7 +93,7 @@ export default function Home() {
             </button>
             <input
               type="number"
-              className="p-2"
+              className="p-4"
               onChange={onInputChange}
               value={item.quantity}
             />
@@ -104,22 +107,24 @@ export default function Home() {
           <p>Total: ${item.quantity * item.price}</p>
           <button
             disabled={item.quantity === 0 || loading}
-            onClick={createCheckOutSession}
+            onClick={createCheckOut}
             className="bg-blue-500 hover:bg-blue-600 text-white block w-full py-2 rounded mt-2 disabled:cursor-not-allowed disabled:bg-blue-100"
           >
-            {loading ? "Processing..." : "Buy"}
+            {loading ? "Processing..." : "Pay with El Dorado"}
           </button>
         </div>
         <a
           className="block text-blue-500 mt-4"
-          href="https://cb-ashik.hashnode.dev/stripe-checkout-with-nextjs"
+          href="https://api-testnet.eldorado.io"
         >
-          Read Blog
+          Integrate it now!
         </a>
-        <div className="bg-yellow-100 text-yellow-700 p-2 mt-2 rounded border mb-2 border-yellow-700">
-          Use test card for testing.
-          <p>Card Number: 4242 4242 4242 4242</p>
-        </div>
+        {error &&
+          <div className="bg-yellow-100 text-yellow-700 p-2 mt-2 rounded border mb-2 border-yellow-700">
+            Could not process payment
+            <p>{error}</p>
+          </div>
+        }
       </main>
     </div>
   );
