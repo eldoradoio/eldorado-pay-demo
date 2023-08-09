@@ -40,7 +40,7 @@ async function CreatePaymentRequest(req, res) {
 
   res.json({
     id: paymentRequest.requestId,
-    href: `https://development-app.eldorado.io/payments/${paymentRequest.requestId}`
+    href: `https://development-app.eldorado.io/payment-request/${paymentRequest.requestId}`
   });
 }
 
