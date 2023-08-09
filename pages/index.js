@@ -12,6 +12,7 @@ export default function Home() {
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState()
+  const [redirecting, setRedirecting] = useState(false)
 
   const [item, setItem] = useState({
     name: "Tasty bag",
@@ -53,6 +54,7 @@ export default function Home() {
     }
     setLoading(false);
     if (checkoutResult) {
+      setRedirecting(true)
       router.push(checkoutResult.href)
     }
   };
@@ -84,33 +86,33 @@ export default function Home() {
           <h3 className="text-xl">{item.name}</h3>
           <p className="text-gray-500">{item.description}</p>
           <p className="text-sm text-gray-600 mt-1">Quantity:</p>
-          <div className="border rounded px-2">
+          <div className="border rounded p-2 flex h-16">
             <button
               onClick={onQuantityMinus}
-              className="bg-blue-500 py-2 px-4 text-white rounded hover:bg-blue-600"
+              className="bg-blue-500 py-2 w-10 text-white rounded hover:bg-blue-600"
             >
               -
             </button>
             <input
               type="number"
-              className="p-4"
+              className="py-4 mx-2"
               onChange={onInputChange}
               value={item.quantity}
             />
             <button
               onClick={onQuantityPlus}
-              className="bg-blue-500 py-2 px-4 text-white rounded hover:bg-blue-600"
+              className="bg-blue-500 py-2 w-10 text-white rounded hover:bg-blue-600"
             >
               +
             </button>
           </div>
           <p>Total: ${item.quantity * item.price}</p>
           <button
-            disabled={item.quantity === 0 || loading}
+            disabled={item.quantity === 0 || loading || redirecting}
             onClick={createCheckOut}
             className="bg-blue-500 hover:bg-blue-600 text-white block w-full py-2 rounded mt-2 disabled:cursor-not-allowed disabled:bg-blue-100"
           >
-            {loading ? "Processing..." : "Pay with El Dorado"}
+            {loading ? "Processing..." :redirecting ? "Redirecting...": "Pay with El Dorado"}
           </button>
         </div>
         <a
