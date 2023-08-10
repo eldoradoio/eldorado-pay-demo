@@ -19,7 +19,7 @@ export default function Home() {
     image:
       "https://images.unsplash.com/photo-1543168256-418811576931?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80",
     quantity: 0,
-    price: 96,
+    price: 0.9,
   });
 
   const changeQuantity = (value) => {
