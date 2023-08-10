@@ -45,8 +45,8 @@ export default function Home() {
     try {
       checkoutResult = await axios.post("/api/create-payment-request", {
         item: item,
-      }).then(x=>x.data)
-      
+      }).then(x => x.data)
+
 
     } catch (e) {
       setError(e.message ?? JSON.stringify(e))
@@ -54,7 +54,7 @@ export default function Home() {
     setLoading(false);
     if (checkoutResult) {
       setRedirecting(true)
-      router.push(checkoutResult.href)
+      router.push(`/payment/${checkoutResult.id}`)
     }
   };
 
@@ -112,7 +112,7 @@ export default function Home() {
             className="bg-eldo-500 hover:bg-eldo-600 text-white flex justify-center w-full py-2 rounded mt-2 disabled:cursor-not-allowed disabled:bg-eldo-100"
           >
             <Image src={'/eldo-bw.png'} width={20} height={20} alt={item.name} className="mr-2" />
-            {loading ? "Processing..." :redirecting ? "Redirecting...": "Pay with El Dorado"}
+            {loading ? "Processing..." : redirecting ? "Redirecting..." : "Pay with El Dorado"}
           </button>
         </div>
         <a
