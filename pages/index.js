@@ -5,7 +5,6 @@ import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 
-
 export default function Home() {
   const router = useRouter();
   const { status } = router.query;
@@ -110,8 +109,9 @@ export default function Home() {
           <button
             disabled={item.quantity === 0 || loading || redirecting}
             onClick={createCheckOut}
-            className="bg-blue-500 hover:bg-blue-600 text-white block w-full py-2 rounded mt-2 disabled:cursor-not-allowed disabled:bg-blue-100"
+            className="bg-eldo-500 hover:bg-eldo-600 text-white flex justify-center w-full py-2 rounded mt-2 disabled:cursor-not-allowed disabled:bg-eldo-100"
           >
+            <Image src={'/eldo-bw.png'} width={20} height={20} alt={item.name} className="mr-2" />
             {loading ? "Processing..." :redirecting ? "Redirecting...": "Pay with El Dorado"}
           </button>
         </div>
